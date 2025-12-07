@@ -3,32 +3,41 @@ from docxtpl import DocxTemplate
 import io
 from datetime import date
 
-# כותרת האפליקציה (מתוקנת)
+# כותרת האפליקציה
 st.title("Living Stone - מחולל הסכמי הלוואה")
-
 st.write("מלא את הפרטים למטה כדי לייצר מסמך Word מוכן לחתימה.")
 
-# --- איסוף נתונים ---
-st.header("פרטי הצדדים")
+# --- 1. פרטי חתימה כלליים ---
+st.header("פרטים כלליים")
+signing_date = date.today().strftime("%d/%m/%Y")
+signing_location = st.text_input("מקום החתימה (לדוגמה: Tel Aviv, Israel)", value="Tel Aviv, Israel")
 
-# פרטי המלווה
-st.subheader("פרטי המלווה")
-lender_name = st.text_input("שם המלווה")
-lender_id = st.text_input("מספר חברה / ת.ז. של המלווה")
-lender_place = st.text_input("מקום התאגדות המלווה (מדינה/עיר)")
+# --- 2. פרטי המלווה (Lender) ---
+st.header("פרטי המלווה (Lender)")
+lender_name = st.text_input("שם המלווה (Lender Name)")
+lender_id = st.text_input("מספר חברה/מזהה המלווה (Registration Num)")
+lender_address = st.text_input("כתובת המלווה")
+lender_place = st.text_input("מקום התאגדות המלווה (Lender Jurisdiction)")
+signer_lender = st.text_input("שם החותם מטעם המלווה (Signer Name)")
 
-# פרטי הלווה
-st.subheader("פרטי הלווה")
-borrower_name = st.text_input("שם הלווה")
-borrower_place = st.text_input("מקום התאגדות הלווה (מדינה/עיר)")
+# --- 3. פרטי הלווה (Borrower) ---
+st.header("פרטי הלווה (Borrower)")
+borrower_name = st.text_input("שם הלווה (Borrower Name)")
+borrower_id = st.text_input("מספר חברה/מזהה הלווה")
+borrower_address = st.text_input("כתובת הלווה")
+borrower_place = st.text_input("מקום התאגדות הלווה (Borrower Jurisdiction)")
+borrower_email = st.text_input("אימייל הלווה")
+signer_borrower = st.text_input("שם החותם מטעם הלווה (Signer Name)")
 
-# פרטי ההלוואה
+# --- 4. תנאי ההלוואה ---
 st.header("תנאי ההלוואה")
-amount = st.number_input("סכום ההלוואה", min_value=0)
-interest = st.number_input("ריבית שנתית (%)", min_value=0.0, step=0.1)
-date_string = date.today().strftime("%d/%m/%Y")
+loan_amount = st.number_input("סכום ההלוואה (מספר בלבד)", min_value=0)
+interest_rate = st.number_input("ריבית שנתית (%)", min_value=0.0, step=0.1)
+loan_years = st.number_input("משך ההלוואה בשנים", min_value=0, step=1, value=2)
+repayment_date = st.text_input("תאריך פירעון סופי (לדוגמה: 31/12/2026)")
+extension_date = st.text_input("תאריך פירעון במקרה של הארכה (לדוגמה: 31/12/2031)")
 
-# --- סעיף 8.3 (סמכות שיפוט) ---
+# --- 5. סמכות שיפוט (סעיף 8.3) ---
 st.subheader("סמכות שיפוט (סעיף 8.3)")
 jurisdiction_option = st.selectbox(
     "בחר את מדינת השיפוט והעיר:",
@@ -39,7 +48,6 @@ jurisdiction_option = st.selectbox(
     )
 )
 
-# לוגיקה לתרגום הבחירה לנתונים במסמך
 if jurisdiction_option == "מדינת ישראל והעיר ת\"א":
     jurisdiction_country = "Israel"
     jurisdiction_city = "Tel Aviv"
@@ -55,18 +63,37 @@ if st.button("צור הסכם הלוואה"):
     # טעינת התבנית
     doc = DocxTemplate("template.docx")
 
-    # יצירת המילון (Context) עם כל הנתונים החדשים
+    # יצירת המילון (Context) - מיפוי המשתנים לתבנית
     context = {
-        "lender_name": lender_name,
-        "lender_id": lender_id,
-        "lender_place": lender_place,
-        "borrower_name": borrower_name,
-        "borrower_place": borrower_place,
-        "amount": amount,
-        "interest": interest,
-        "country": jurisdiction_country,
-        "city": jurisdiction_city,
-        "date": date_string
+        # כללי
+        [cite_start]"signing_date": signing_date,           # [cite: 2]
+        [cite_start]"signing_location": signing_location,   # [cite: 2]
+        
+        # מלווה
+        [cite_start]"lender_name": lender_name,             # [cite: 2]
+        [cite_start]"lender_id": lender_id,                 # [cite: 2]
+        [cite_start]"lender_address": lender_address,       # [cite: 2]
+        [cite_start]"lender_place": lender_place,           # [cite: 2]
+        [cite_start]"signer_lender": signer_lender,         # [cite: 38]
+
+        # לווה
+        [cite_start]"borrower_name": borrower_name,         # [cite: 2]
+        [cite_start]"borrower_id": borrower_id,             # [cite: 2]
+        [cite_start]"borrower_address": borrower_address,   # [cite: 2]
+        "borrower_place": borrower_place,       # שים לב: ב-Word זה חייב להיות עם קו תחתון!
+        [cite_start]"borrower_email": borrower_email,       # [cite: 29]
+        [cite_start]"signer_borrower": signer_borrower,     # [cite: 38]
+
+        # הלוואה
+        "loan_amount": f"{loan_amount:,}",      # מוסיף פסיקים למספרים (1,000)
+        [cite_start]"loan_years": str(loan_years),          # [cite: 9]
+        [cite_start]"repayment_date": repayment_date,       # [cite: 10]
+        [cite_start]"interest_rate": f"{interest_rate}%",   # [cite: 12] מוסיף סימן אחוז
+        [cite_start]"extension_date": extension_date,       # [cite: 13]
+
+        # שיפוט
+        [cite_start]"country": jurisdiction_country,        # [cite: 19]
+        [cite_start]"city": jurisdiction_city               # [cite: 19]
     }
 
     # רנדור המסמך
