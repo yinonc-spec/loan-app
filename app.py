@@ -6,7 +6,7 @@ import datetime
 # הגדרות עמוד
 st.set_page_config(page_title="מחולל הסכמי הלוואה", layout="wide")
 
-st.title("📄 מחולל הסכמי הלוואה - Living Stone / Cyrus")
+st.title("📄 מחולל הסכמי הלוואה - Living Stone ")
 st.markdown("מלא את הפרטים למטה כדי לייצר מסמך Word מוכן לחתימה.")
 
 # --- טופס הזנת נתונים ---
