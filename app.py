@@ -66,34 +66,34 @@ if st.button("צור הסכם הלוואה"):
     # יצירת המילון (Context) - מיפוי המשתנים לתבנית
     context = {
         # כללי
-        [cite_start]"signing_date": signing_date,           # [cite: 2]
-        [cite_start]"signing_location": signing_location,   # [cite: 2]
+        "signing_date": signing_date,
+        "signing_location": signing_location,
         
         # מלווה
-        [cite_start]"lender_name": lender_name,             # [cite: 2]
-        [cite_start]"lender_id": lender_id,                 # [cite: 2]
-        [cite_start]"lender_address": lender_address,       # [cite: 2]
-        [cite_start]"lender_place": lender_place,           # [cite: 2]
-        [cite_start]"signer_lender": signer_lender,         # [cite: 38]
+        "lender_name": lender_name,
+        "lender_id": lender_id,
+        "lender_address": lender_address,
+        "lender_place": lender_place,
+        "signer_lender": signer_lender,
 
         # לווה
-        [cite_start]"borrower_name": borrower_name,         # [cite: 2]
-        [cite_start]"borrower_id": borrower_id,             # [cite: 2]
-        [cite_start]"borrower_address": borrower_address,   # [cite: 2]
-        "borrower_place": borrower_place,       # שים לב: ב-Word זה חייב להיות עם קו תחתון!
-        [cite_start]"borrower_email": borrower_email,       # [cite: 29]
-        [cite_start]"signer_borrower": signer_borrower,     # [cite: 38]
+        "borrower_name": borrower_name,
+        "borrower_id": borrower_id,
+        "borrower_address": borrower_address,
+        "borrower_place": borrower_place,
+        "borrower_email": borrower_email,
+        "signer_borrower": signer_borrower,
 
         # הלוואה
-        "loan_amount": f"{loan_amount:,}",      # מוסיף פסיקים למספרים (1,000)
-        [cite_start]"loan_years": str(loan_years),          # [cite: 9]
-        [cite_start]"repayment_date": repayment_date,       # [cite: 10]
-        [cite_start]"interest_rate": f"{interest_rate}%",   # [cite: 12] מוסיף סימן אחוז
-        [cite_start]"extension_date": extension_date,       # [cite: 13]
+        "loan_amount": f"{loan_amount:,}",
+        "loan_years": str(loan_years),
+        "repayment_date": repayment_date,
+        "interest_rate": f"{interest_rate}%",
+        "extension_date": extension_date,
 
         # שיפוט
-        [cite_start]"country": jurisdiction_country,        # [cite: 19]
-        [cite_start]"city": jurisdiction_city               # [cite: 19]
+        "country": jurisdiction_country,
+        "city": jurisdiction_city
     }
 
     # רנדור המסמך
